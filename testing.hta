@@ -1,7 +1,6 @@
 <head>
 <title>SAP fixit</title>
-<HTA:
- 
+<HTA:APPLICATION 
      APPLICATIONNAME="SAP Uninstaller & Configurator"
      SCROLL="NO"
      SINGLEINSTANCE="YES"
@@ -12,10 +11,31 @@
 	 SHOWINTASKBAR="YES"
 	 SCROLLFLAT="NO"
 	 BORDER="THIN"
-
 >
 
 </head>
+<!-- This is the style -->
+
+<style>
+body{
+	background-color: #a6b7c8;
+	}
+
+input{
+	
+	}
+#clickit{
+	width: 70px;
+	height: 10px;
+	padding: 3px;
+	align: right;
+	border: solid 1px red;
+	position: absolute;
+	left: 75%;
+	text-align: center;
+}
+
+</style>
 
 <!-- This is where you customize action -->
 
@@ -30,11 +50,14 @@
 
 <body>
 
+
 <!-- This is where you customize the look -->
 
 <input type="radio" name="SAP"> Uninstall SAP </input>
 <input type="radio" name="SAP"> Configure ini files </input>
-
-<input type="button" value="Run Script !" name="run_button"  onClick="TestSub"><p> 
+<!--
+<input type="button" value="Run Script !" name="run_button"  onClick="TestSub">
+-->
+<div id="clickit"> Run now </div>
 
 </body>
