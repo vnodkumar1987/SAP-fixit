@@ -40,12 +40,20 @@ input{
 <!-- This is where you customize action -->
 
 <script language="VBScript">
+
 	Sub Window_onLoad
         window.resizeTo 400,100
     End Sub 
-    Sub TestSub
-        Msgbox "This will run the script"
-    End Sub
+    
+	Sub RunScript
+		If UserOption(0).Checked Then
+			Msgbox "This will uninstall SAP"
+		End If
+		If UserOption(1).Checked Then
+			Msgbox "This will copy SAP ini files"
+		End If
+	End Sub
+	
 </script>
 
 <body>
@@ -53,11 +61,12 @@ input{
 
 <!-- This is where you customize the look -->
 
-<input type="radio" name="SAP"> Uninstall SAP </input>
-<input type="radio" name="SAP"> Configure ini files </input>
-<!--
-<input type="button" value="Run Script !" name="run_button"  onClick="TestSub">
--->
-<div id="clickit"> Run now </div>
+<input type="radio" name="UserOption" value="1">Uninstall SAP 
+<input type="radio" name="UserOption" value="2">Configure ini files 
 
+<input type="button" value="Run Script !" name="run_button"  onClick="RunScript">
+
+<!--
+<div id="clickit"> Run now </div>
+-->
 </body>
