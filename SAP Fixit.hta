@@ -1,0 +1,38 @@
+<head>
+<title>SAP fixit</title>
+<HTA:APPLICATION 
+     APPLICATIONNAME="SAP Uninstaller & Configurator"
+     SCROLL="NO"
+     SINGLEINSTANCE="YES"
+	 MAXIMIZEBUTTON="NO"
+	 MINIMIZEBUTTON="NO"
+	 ICON="http://www.logosforwebsites.com/wp-content/uploads/2009/07/favicon.ico"
+	 INNERBORDER="YES"
+	 SHOWINTASKBAR="YES"
+	 SCROLLFLAT="NO"
+	 BORDER="THIN"
+>
+
+</head>
+
+<!-- This is where you customize action -->
+
+<script language="VBScript">
+	Sub Window_onLoad
+        window.resizeTo 400,100
+    End Sub 
+    Sub TestSub
+        Msgbox "This will run the script"
+    End Sub
+</script>
+
+<body>
+
+<!-- This is where you customize the look -->
+
+<input type="radio" name="SAP"> Uninstall SAP </input>
+<input type="radio" name="SAP"> Configure ini files </input>
+
+<input type="button" value="Run Script" name="run_button"  onClick="TestSub"><p> 
+
+</body>
