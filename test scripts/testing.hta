@@ -36,18 +36,62 @@ input{
 	text-align: center;
 }
 
+#progressbar{
+	padding-top: 10px;
+	}
+
 </style>
 
 <!-- This is where you customize action -->
 
 <script language="VBScript">
-
 	'This sets the window size
 	Sub Window_onLoad
         window.resizeTo 400,100
     End Sub 
-    
+	
+	Dim pbTimerID 
+    Dim pbHTML  
+    Dim pbWaitTime 
+    Dim pbHeight 
+    Dim pbWidth 
+    Dim pbBorder 
+    Dim pbUnloadedColor 
+    Dim pbLoadedColor 
+    Dim pbStartTime 
+	
+	Sub rProgressbar 
+        pbHTML = "" 
+        pbSecsPassed = DateDiff("s",pbStartTime,Now) 
+        pbMinsToGo =  Int((pbWaitTime - pbSecsPassed) / 60) 
+        pbSecsToGo = Int((pbWaitTime - pbSecsPassed) - (pbMinsToGo * 60)) 
+        if pbSecsToGo < 10 then 
+            pbSecsToGo = "0" & pbSecsToGo  
+        end if 
+        pbLoadedWidth = (pbSecsPassed / pbWaittime) * pbWidth 
+        pbUnloadedWidth = pbWidth - pbLoadedWidth 
+        pbHTML = pbHTML & "<table border=1 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "> &nbsp;</td>" 
+        pbHTML = pbHTML & "</tr></table>" 
+        progressbar.InnerHTML = pbHTML 
+       if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
+            StopTimer 
+       end if 
+    End Sub 
+     
+    Sub StopTimer 
+        'window.clearInterval(PBTimerID)
+		'window.close(PBTimerID)
+		 window.location.reload()
+    End Sub 
+   
+    '*************************************************************************
 	'This is to Uninstall and configure
+	
 	Sub RunScript
 	
 		'This is to Uninstall
@@ -59,16 +103,24 @@ input{
 			On Error Resume Next
 			dim WshShell
 			set WshShell = CreateObject("WScript.shell")
-			
-			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
-			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
+			pbWaitTime = 10         ' How many seconds the progress bar lasts 
+			pbHeight = 7        ' Progress bar height 
+			pbWidth= 300      ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
 			
 			WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg")
 
 			'*********************************************************************
 			'*********************************************************************
 			'removing registry entry for SAP
-
+			
+			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
+			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
 			
 			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPGUI710\"
 			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP_WUS\"
@@ -80,27 +132,34 @@ input{
 			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{196467F1-C11F-4F76-858B-5812ADC83B94}\"
 			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{44D66AD9-AE19-4AFD-BE7E-A1B44C856697}\"
 			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
-
-			
-			
 			WshShell.run "cmd /k /q  & REG DELETE HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs /v C:\Windows\System32\SAPbtmp.dll /f & exit"
 			
 		End If
 		
 		'This is to configure SAP ini files
-		'refer filecopy.vbs
-		If UserOption(1).Checked Then
 			
+		If UserOption(1).Checked Then
+			pbWaitTime = 5         ' How many seconds the progress bar lasts 
+			pbHeight = 7        ' Progress bar height 
+			pbWidth= 350         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
 			Dim FSO
 			Set FSO = CreateObject("Scripting.FileSystemObject")
-
+			
 			'Copy the files if they don't exist, rename them before copying if they exist
+			
 			If (FSO.FileExists("C:\v\vinod.txt")) Then
-				FSO.MoveFile "C:\v\vinod.txt", "C:\v\vinod.txt.old"
-				Msgbox "Renamed"
+				FSO.DeleteFile "C:\v\vinod.txt"
+				'FSO.CopyFile "C:\vinod.txt", "C:\v\vinod.txt"
+				'Msgbox "Renamed"
 			Else
 				FSO.CopyFile "C:\vinod.txt", "C:\v\vinod.txt"
-				Msgbox "Copied"
+				'Msgbox "Copied"
 			End If
 			Set FSO = nothing
 			
@@ -111,16 +170,11 @@ input{
 </script>
 
 <body>
-
-
-<!-- This is where you customize the look -->
+<span id="progressbar"></span> 
 
 <input type="radio" name="UserOption" value="1">Uninstall SAP 
 <input type="radio" name="UserOption" value="2">Configure ini files 
 
 <input type="button" value="Run Script !" name="run_button"  onClick="RunScript">
 
-<!--
-<div id="clickit"> Run now </div>
--->
 </body>

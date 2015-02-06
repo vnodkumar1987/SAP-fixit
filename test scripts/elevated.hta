@@ -1,0 +1,59 @@
+<html> 
+<head> 
+<title>HTA Helpomatic</title> 
+ 
+<HTA:APPLICATION 
+     ID="oHTA" 
+     APPLICATIONNAME="HTAHelpomatic" 
+     SCROLL="yes" 
+     SINGLEINSTANCE="yes" 
+> 
+<!-- ID="objHTAHelpomatic" --> 
+<!-- WINDOWSTATE="maximize" --> 
+ 
+</head> 
+ 
+<SCRIPT Language="VBScript"> 
+ 
+If HTAElevate() = True Then 
+	'CreateObject("WScript.Shell").Run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit", , True
+	'CreateObject("WScript.Shell").Run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent"), , True
+	'Main2
+    'Call Main2() 
+End If
+
+Sub Main2() 
+    MsgBox "this is nothing"
+End Sub
+
+Sub Main() 
+    
+End Sub
+
+Function HTAElevate() 
+ 
+  Const Elev = " /elevated" 
+ 
+  HTAElevate = True 
+ 
+  If InStr( LCase( oHTA.commandLine ), Elev) > 0 then Exit Function 
+
+  On Error Resume Next 
+    window.resizeto 750, 10 ' : window.moveto screen.width / 2, screen.height / 2 
+  On Error GoTo 0 
+ 
+  createobject("Shell.Application").ShellExecute "mshta.exe", oHTA.commandLine & Elev, "", "runas", 1 
+ 
+  HTAElevate = False 
+ 
+  self.close 
+ 
+End Function ' HTAElevate() 
+ 
+ 
+</SCRIPT> 
+<body> 
+ 
+ 
+</body> 
+</html>
