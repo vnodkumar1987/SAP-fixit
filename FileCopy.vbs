@@ -61,7 +61,7 @@ LocalAppData = WshShell.ExpandEnvironmentStrings("%APPDATA%")
 If (FSO.FileExists(LocalAppData & "\SAP\Common\saplogon.ini")) Then
 	FSO.DeleteFile(LocalAppData & "\SAP\Common\saplogon.ini")
 	FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
-	Msgbox "Renamed & copied"
+	'Msgbox "Renamed & copied"
 Else
 	FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
 	'Msgbox "Copied"

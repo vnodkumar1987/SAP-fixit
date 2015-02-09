@@ -6,7 +6,7 @@
      SINGLEINSTANCE="YES"
 	 MAXIMIZEBUTTON="NO"
 	 MINIMIZEBUTTON="NO"
-	 ICON="http://www.logosforwebsites.com/wp-content/uploads/2009/07/favicon.ico"
+	 ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
 	 INNERBORDER="YES"
 	 SHOWINTASKBAR="YES"
 	 SCROLLFLAT="NO"
@@ -40,33 +40,196 @@ input{
 <!-- This is where you customize action -->
 
 <script language="VBScript">
-
+	'This sets the window size
 	Sub Window_onLoad
-        window.resizeTo 400,100
+        window.resizeTo 400,105
     End Sub 
-    
+	
+	Dim pbTimerID 
+    Dim pbHTML  
+    Dim pbWaitTime 
+    Dim pbHeight 
+    Dim pbWidth 
+    Dim pbBorder 
+    Dim pbUnloadedColor 
+    Dim pbLoadedColor 
+    Dim pbStartTime 
+	
+	Sub rProgressbar 
+        pbHTML = "" 
+        pbSecsPassed = DateDiff("s",pbStartTime,Now) 
+        pbMinsToGo =  Int((pbWaitTime - pbSecsPassed) / 60) 
+        pbSecsToGo = Int((pbWaitTime - pbSecsPassed) - (pbMinsToGo * 60)) 
+        if pbSecsToGo < 10 then 
+            pbSecsToGo = "0" & pbSecsToGo  
+        end if 
+        pbLoadedWidth = (pbSecsPassed / pbWaittime) * pbWidth 
+        pbUnloadedWidth = pbWidth - pbLoadedWidth 
+        pbHTML = pbHTML & "<table border=1 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Please wait ... <br><br></td>" 
+        pbHTML = pbHTML & "</tr></table>" 
+        progressbar.InnerHTML = pbHTML 
+       if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
+            StopTimer 
+       end if 
+    End Sub 
+     
+    Sub StopTimer 
+        'window.clearInterval(PBTimerID)
+		'window.close(PBTimerID)
+		 window.location.reload()
+    End Sub 
+   
+    '*************************************************************************
+	'This is to Uninstall and configure
+	
 	Sub RunScript
+	
+		'This is to Uninstall
 		If UserOption(0).Checked Then
-			Msgbox "This will uninstall SAP"
+			
+			'*********************************************************************
+			'*********************************************************************
+			'invoking complete Uninstall with noDlg switch
+			On Error Resume Next
+			dim WshShell
+			set WshShell = CreateObject("WScript.shell")
+			pbWaitTime = 240         ' How many seconds the progress bar lasts 
+			pbHeight = 6        ' Progress bar height 
+			pbWidth= 350      ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
+			
+			WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent")
+
+			'*********************************************************************
+			'*********************************************************************
+			'removing registry entry for SAP
+			
+			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
+			WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
+			
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPGUI710\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP_WUS\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPBI\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP Channel Encryption\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2385C070-EC26-4AB9-8718-E605C977C0ED}\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{A47A9101-6EB5-4314-BDA1-297880FBB908}\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{CEC7A786-A9C8-4EF7-BB59-6518E3B3C878}\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{196467F1-C11F-4F76-858B-5812ADC83B94}\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{44D66AD9-AE19-4AFD-BE7E-A1B44C856697}\"
+			WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
+			WshShell.run "cmd /k /q  & REG DELETE HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs /v C:\Windows\System32\SAPbtmp.dll /f & exit"
+			
 		End If
+		
+		'This is to configure SAP ini files
+			
 		If UserOption(1).Checked Then
-			Msgbox "This will copy SAP ini files"
+			pbWaitTime = 5         ' How many seconds the progress bar lasts 
+			pbHeight = 6        ' Progress bar height 
+			pbWidth= 350         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
+			
+			
+			'Copy the files if they don't exist, delete them before copying if they exist
+			
+			Dim FSO
+			Set FSO = CreateObject("Scripting.FileSystemObject")
+
+			'Copy the files if they don't exist, rename them before copying if they exist
+			'Copying saplogon.ini
+			If (FSO.FileExists("C:\windows\saplogon.ini")) Then
+				'FSO.MoveFile "C:\windows\saplogon.ini", "C:\windows\saplogon.ini.old"
+				FSO.DeleteFile "C:\Windows\saplogon.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
+				'Msgbox "Renamed & copied"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
+				'Msgbox "Copied"
+			End If
+
+			'***************************************************************
+
+			'copying services // double if loop
+
+			If (FSO.FileExists("C:\Windows\System32\drivers\etc\services.old")) Then
+				'FSO.MoveFile "C:\Windows\System32\drivers\etc\services", "C:\Windows\System32\drivers\etc\services.old"
+				FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+			Else
+					If (FSO.FileExists("C:\windows\System32\drivers\etc\services")) Then
+						FSO.MoveFile "C:\windows\System32\drivers\etc\services", "C:\windows\System32\drivers\etc\services.old"
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+						'Msgbox "Renamed & copied"
+					Else
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+						'Msgbox "Copied"
+					End If
+			End If
+
+			'*******************************************************************
+
+			'copying sapmsg.ini
+
+			If (FSO.FileExists("C:\windows\sapmsg.ini")) Then
+				'FSO.MoveFile "C:\windows\sapmsg.ini", "C:\windows\sapmsg.ini.old"
+				FSO.DeleteFile "C:\Windows\sapmsg.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+				'Msgbox "Renamed & copied"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+				'Msgbox "Copied"
+			End If
+
+			'***************************************************************
+
+			'copying saplogon.ini to appdata
+			Dim LocalAppData
+
+			Set WshShell = CreateObject("Wscript.Shell")
+			'Set FSO = CreateObject("Scripting.FileSystemObject")
+
+			LocalAppData = WshShell.ExpandEnvironmentStrings("%APPDATA%")
+
+			If (FSO.FileExists(LocalAppData & "\SAP\Common\saplogon.ini")) Then
+				FSO.DeleteFile(LocalAppData & "\SAP\Common\saplogon.ini")
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+				'Msgbox "Renamed & copied"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+				'Msgbox "Copied"
+			End If
+			
+			Set FSO = nothing
+
+			'***************************************************************
+			
 		End If
+		
 	End Sub
 	
 </script>
 
 <body>
+<span id="progressbar"></span> 
 
-
-<!-- This is where you customize the look -->
-
-<input type="radio" name="UserOption" value="1">Uninstall SAP 
-<input type="radio" name="UserOption" value="2">Configure ini files 
+<input type="radio" name="UserOption" value="1">Uninstall SAP &nbsp;
+<input type="radio" name="UserOption" value="2">Configure ini files &nbsp;
 
 <input type="button" value="Run Script !" name="run_button"  onClick="RunScript">
 
-<!--
-<div id="clickit"> Run now </div>
--->
 </body>
