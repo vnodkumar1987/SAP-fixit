@@ -6,13 +6,12 @@
      SINGLEINSTANCE="YES"
 	 MAXIMIZEBUTTON="NO"
 	 MINIMIZEBUTTON="NO"
-	 ICON="http://www.logosforwebsites.com/wp-content/uploads/2009/07/favicon.ico"
+	 ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
 	 INNERBORDER="YES"
 	 SHOWINTASKBAR="YES"
 	 SCROLLFLAT="NO"
 	 BORDER="THIN"
 >
-
 
 </head>
 <!-- This is the style -->
@@ -99,7 +98,7 @@ input{
 			On Error Resume Next
 			dim WshShell
 			set WshShell = CreateObject("WScript.shell")
-			pbWaitTime = 10         ' How many seconds the progress bar lasts 
+			pbWaitTime = 240         ' How many seconds the progress bar lasts 
 			pbHeight = 6        ' Progress bar height 
 			pbWidth= 350      ' Progress bar width 
 			pbUnloadedColor="white"        ' Color of unloaded area 
@@ -145,20 +144,79 @@ input{
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 10) 
 			
+			
+			'Copy the files if they don't exist, delete them before copying if they exist
+			
 			Dim FSO
 			Set FSO = CreateObject("Scripting.FileSystemObject")
-			
+
 			'Copy the files if they don't exist, rename them before copying if they exist
-			
-			If (FSO.FileExists("C:\v\vinod.txt")) Then
-				FSO.DeleteFile "C:\v\vinod.txt"
-				'FSO.CopyFile "C:\vinod.txt", "C:\v\vinod.txt"
-				'Msgbox "Renamed"
+			'Copying saplogon.ini
+			If (FSO.FileExists("C:\windows\saplogon.ini")) Then
+				'FSO.MoveFile "C:\windows\saplogon.ini", "C:\windows\saplogon.ini.old"
+				FSO.DeleteFile "C:\Windows\saplogon.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
+				'Msgbox "Renamed & copied"
 			Else
-				FSO.CopyFile "C:\vinod.txt", "C:\v\vinod.txt"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
 				'Msgbox "Copied"
 			End If
+
+			'***************************************************************
+
+			'copying services // double if loop
+
+			If (FSO.FileExists("C:\Windows\System32\drivers\etc\services.old")) Then
+				'FSO.MoveFile "C:\Windows\System32\drivers\etc\services", "C:\Windows\System32\drivers\etc\services.old"
+				FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+			Else
+					If (FSO.FileExists("C:\windows\System32\drivers\etc\services")) Then
+						FSO.MoveFile "C:\windows\System32\drivers\etc\services", "C:\windows\System32\drivers\etc\services.old"
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+						'Msgbox "Renamed & copied"
+					Else
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+						'Msgbox "Copied"
+					End If
+			End If
+
+			'*******************************************************************
+
+			'copying sapmsg.ini
+
+			If (FSO.FileExists("C:\windows\sapmsg.ini")) Then
+				'FSO.MoveFile "C:\windows\sapmsg.ini", "C:\windows\sapmsg.ini.old"
+				FSO.DeleteFile "C:\Windows\sapmsg.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+				'Msgbox "Renamed & copied"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+				'Msgbox "Copied"
+			End If
+
+			'***************************************************************
+
+			'copying saplogon.ini to appdata
+			Dim LocalAppData
+
+			Set WshShell = CreateObject("Wscript.Shell")
+			'Set FSO = CreateObject("Scripting.FileSystemObject")
+
+			LocalAppData = WshShell.ExpandEnvironmentStrings("%APPDATA%")
+
+			If (FSO.FileExists(LocalAppData & "\SAP\Common\saplogon.ini")) Then
+				FSO.DeleteFile(LocalAppData & "\SAP\Common\saplogon.ini")
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+				'Msgbox "Renamed & copied"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+				'Msgbox "Copied"
+			End If
+			
 			Set FSO = nothing
+
+			'***************************************************************
 			
 		End If
 		
@@ -169,8 +227,8 @@ input{
 <body>
 <span id="progressbar"></span> 
 
-<input type="radio" name="UserOption" value="1">Uninstall SAP 
-<input type="radio" name="UserOption" value="2">Configure ini files 
+<input type="radio" name="UserOption" value="1">Uninstall SAP &nbsp;
+<input type="radio" name="UserOption" value="2">Configure ini files &nbsp;
 
 <input type="button" value="Run Script !" name="run_button"  onClick="RunScript">
 
