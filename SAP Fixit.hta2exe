@@ -1,0 +1,15 @@
+<convert2exe>
+    <path>C:\Users\labuser\Desktop\UAC.exe</path>
+    <uacLevel>requireAdministrator</uacLevel>
+    <icon>C:\Users\labuser\Desktop\favicon.ico</icon>
+    <mode>cscript</mode>
+    <silent>no</silent>
+    <unicode>no</unicode>
+    <build>64bit</build>
+    <details>
+        <version>1.0.0.0</version>
+        <description></description>
+        <productName>SAP Fixit</productName>
+        <copyright>Copyright (C) 2015</copyright>
+    </details>
+</convert2exe>

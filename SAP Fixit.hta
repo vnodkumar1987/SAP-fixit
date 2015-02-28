@@ -13,6 +13,7 @@
 	 BORDER="THIN"
 >
 
+
 </head>
 <!-- This is the style -->
 
@@ -167,8 +168,8 @@ input{
 			'copying services // double if loop
 
 			If (FSO.FileExists("C:\Windows\System32\drivers\etc\services.old")) Then
-				'FSO.MoveFile "C:\Windows\System32\drivers\etc\services", "C:\Windows\System32\drivers\etc\services.old"
-				FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
+				FSO.MoveFile "C:\Windows\System32\drivers\etc\services", "C:\Windows\System32\drivers\etc\services.old"
+				'FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
 				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
 			Else
 					If (FSO.FileExists("C:\windows\System32\drivers\etc\services")) Then

@@ -1,0 +1,126 @@
+<head>
+<title>SAP Fixit V2</title>
+<HTA:APPLICATION 
+     APPLICATIONNAME="SAP Uninstaller & Configurator"
+     SCROLL="NO"
+     SINGLEINSTANCE="YES"
+	 MAXIMIZEBUTTON="NO"
+	 MINIMIZEBUTTON="NO"
+	 'ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
+	 INNERBORDER="YES"
+	 SHOWINTASKBAR="YES"
+	 SCROLLFLAT="NO"
+	 BORDER="THIN"
+>
+<style>
+body{
+	background: gray;
+	color: white;
+	
+	font-size: 19px;
+	}
+.btn{
+	width: 200px;
+	height: 45px;
+	border: 2px solid red;
+	margin-top: 14px;
+	margin-left: 10px;
+	padding: 5px;
+	text-align: center;
+	line-height: 35px;
+}
+
+a{
+	text-decoration: none;
+	cursor: pointer;
+	color: white;
+}
+
+#install{
+	align: right;
+	margin-left: 300px;
+	margin-top: -140px;
+	border: 1px solid white;
+}
+
+#install span{
+	border: 1px solid red;
+	width: 200px;
+	height: 45px;
+	text-align: center;
+	line-height: 35px;
+	
+}
+</style>
+</head> 
+
+<SCRIPT Language="VBScript">
+	'This defines the window size
+	Sub Window_onLoad
+        window.resizeTo 650,250
+    End Sub 
+	
+	'Add BEx script here
+	Sub doBEx
+		MsgBox "BEx"
+	End Sub
+	
+	'Create connections
+	Sub doINI
+		MsgBox "ini files copied"
+	End Sub
+	
+	'Uninstall SAP
+	Sub doUNINS
+		MsgBox "SAP Uninstalled"
+	End Sub
+	
+
+	
+</SCRIPT> 
+
+<body> 
+	<div> <!-- This is my SAP ALL in One Fix -->
+		
+		<a href="#" onClick="doBEx">
+			<div class="btn" id="addin">
+				Add BEx Addin
+			</div>
+		</a> <!-- -->
+		
+		<a href="#" onClick="doINI">
+			<div class="btn" id="ini">
+				Create connections
+			</div>
+		</a> <!-- -->
+		
+		<a href="#" onclick="doUNINS">
+			<div class="btn" id="uninstall">
+				Uninstall SAP
+			</div>
+		</a>
+		
+		<div id="install">
+			
+			<div id="install_menu">
+				<span>SAP install Menu </span>
+			</div>
+			
+			<select name="ver_menu">
+				<option Value="0" Selected>Choose Version</option>
+				<option value="1">SAP 720</option>
+				<option value="2">SAP 730</option>
+			</select>
+			<select name="loc_menu">
+				<option value="0" Selected>Choose your location</option>
+				<option value="1">Noida</option>
+				<option value="2">SAN JOSE</option>
+			</select>
+		
+		</div>
+		
+	</div> <!-- End of Div -->
+
+</body> 
+
+</html>
