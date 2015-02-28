@@ -25,7 +25,7 @@ body{
 	width: 200px;
 	height: 40px;
 	border: 2px solid white;
-	margin-top: 12px;
+	margin-top: 14px;
 	margin-left: 10px;
 	padding: 5px;
 	text-align: center;
@@ -86,6 +86,51 @@ a{
         window.resizeTo 650,250
     End Sub 
 	
+	'ProgressBar subroutine
+	''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	Dim pbTimerID 
+    Dim pbHTML  
+    Dim pbWaitTime 
+    Dim pbHeight 
+    Dim pbWidth 
+    Dim pbBorder 
+    Dim pbUnloadedColor 
+    Dim pbLoadedColor 
+    Dim pbStartTime
+	
+	Sub rProgressbar 
+        pbHTML = "" 
+        pbSecsPassed = DateDiff("s",pbStartTime,Now) 
+        pbMinsToGo =  Int((pbWaitTime - pbSecsPassed) / 60) 
+        pbSecsToGo = Int((pbWaitTime - pbSecsPassed) - (pbMinsToGo * 60)) 
+        if pbSecsToGo < 10 then 
+            pbSecsToGo = "0" & pbSecsToGo  
+        end if 
+        pbLoadedWidth = (pbSecsPassed / pbWaittime) * pbWidth 
+        pbUnloadedWidth = pbWidth - pbLoadedWidth 
+        pbHTML = pbHTML & "<table border=1 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Please wait ... <br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Install Time : 10 Minutes<br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Uninstall Time : 3.5 Minutes<br><br></td>" 		
+        pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+       if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
+            StopTimer 
+       end if 
+    End Sub 
+     
+    Sub StopTimer 
+        'window.clearInterval(PBTimerID)
+		'window.close(PBTimerID)
+		 window.location.reload()
+    End Sub 
+	''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	'Add BEx script here
 	Sub doBEx
 		Const HKEY_CURRENT_USER = &H80000001
@@ -173,13 +218,22 @@ a{
 	
 	'Uninstall SAP
 	Sub doUNINS
+		pbWaitTime = 20         ' How many seconds the progress bar lasts 
+		pbHeight = 20        ' Progress bar height 
+		pbWidth= 600         ' Progress bar width 
+		pbUnloadedColor="white"        ' Color of unloaded area 
+		pbLoadedColor="black"        ' Color of loaded area 
+		pbBorder="grey"        ' Color of Progress bar border 
+		pbStartTime = Now 
+		rProgressbar 
+		pbTimerID = window.setInterval("rProgressbar", 10)
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
 		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent")
-
+		'WScript.Sleep 1000
 		'removing registry entry for SAP
-		
+		'msgbox "bing"
 		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
 		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
 
@@ -198,42 +252,68 @@ a{
 	
 	'Install SAP now
 	'Install from Noida Share
-	Sub INSNOI
-	
+	Sub INS720
+		If loc_720(1).selected Then
+			pbWaitTime = 20         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
+			msgbox "SAP 720 from Noida"
+		End If
+	End Sub
+	Sub INS730
+		If loc_730(1).selected Then
+			pbWaitTime = 20         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10) 
+			msgbox "SAP 730 from Noida"
+		End If
 	End Sub
 	
 </SCRIPT> 
 
-<body> 
+<body>
+<div id="statbar"> <!-- For progress bar--> 
 	<div> <!-- This is my SAP ALL in One Fix -->
 		
 		<a href="#" onClick="doBEx">
 			<div class="btn" id="addin">
 				Add BEx Addin
 			</div>
-		</a> <!-- -->
+		</a> <!-- End of BEx addin addin Sub -->
 		
 		<a href="#" onClick="doINI">
 			<div class="btn" id="ini">
 				Create connections
 			</div>
-		</a> <!-- -->
+		</a> <!-- End of INI file copying Sub-->
 		
 		<a href="#" onclick="doUNINS">
 			<div class="btn" id="uninstall">
 				Uninstall SAP
 			</div>
-		</a>
+		</a> <!-- End of SAP uninstalling Sub-->
 		
-		<div id="install">
+		<div id="install"> <!-- This is install div-->
 			
-			<div id="install_menu">
+			<div id="install_menu"> <!-- This is install menu -->
 				<span>SAP install Menu </span>
 			</div>
 			
-			<div id="720">
+			<div id="720"> <!-- Select location for SAP 720 -->
 				<p> SAP 720</p>
-					<select name="loc_menu">
+					<select name="loc_720" onChange="INS720">
 						<option value="0" Selected>Choose your location</option>
 						<option value="1">Noida</option>
 						<option value="2">Bangalore</option>
@@ -247,9 +327,9 @@ a{
 						<option value="10">Singapore</option>
 			</select>
 			</div>
-			<div id="730">
-				<p> SAP 730</p>
-				<select name="loc_menu">
+			<div id="730">  <!-- Select location for SAP 730 -->
+				<p> SAP 730</p> 
+				<select name="loc_730" onChange="INS730">
 						<option value="0" Selected>Choose your location</option>
 						<option value="1">Noida</option>
 						<option value="2">Bangalore</option>
@@ -267,7 +347,7 @@ a{
 		</div>
 		
 	</div> <!-- End of Div -->
-
+</div> <!-- This is progress bar -->
 </body> 
 
 </html>
