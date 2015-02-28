@@ -277,7 +277,8 @@ a{
 			pbStartTime = Now 
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 10) 
-			msgbox "SAP 730 from Noida"
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""C:\Users\labuser\Desktop\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1""")
 		End If
 	End Sub
 	
@@ -310,7 +311,7 @@ a{
 			<div id="install_menu"> <!-- This is install menu -->
 				<span>SAP install Menu </span>
 			</div>
-			
+	
 			<div id="720"> <!-- Select location for SAP 720 -->
 				<p> SAP 720</p>
 					<select name="loc_720" onChange="INS720">
