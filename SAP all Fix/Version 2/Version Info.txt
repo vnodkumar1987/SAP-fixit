@@ -1,0 +1,8 @@
++
+	New UI
+	Location Detection	
+	Install From sever
+	Progress Bar with Unistall
+
+-
+	Install from server progress not synced with progress bar

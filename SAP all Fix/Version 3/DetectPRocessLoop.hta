@@ -1,0 +1,98 @@
+<html>
+ <head>
+ <title>HTA Test</title>
+ <HTA:APPLICATION
+     ID="objTest"
+     APPLICATIONNAME="HTATest"
+     SCROLL="no"
+     SINGLEINSTANCE="yes"
+ >
+ <script language = "VBScript">
+	
+	'''''''''''''''''''''''
+	Dim pbTimerID 
+    Dim pbHTML  
+    Dim pbWaitTime 
+    Dim pbHeight 
+    Dim pbWidth 
+    Dim pbBorder 
+    Dim pbUnloadedColor 
+    Dim pbLoadedColor 
+    Dim pbStartTime
+	
+	Sub rProgressbar 
+        pbHTML = "" 
+        pbSecsPassed = DateDiff("s",pbStartTime,Now) 
+        pbMinsToGo =  Int((pbWaitTime - pbSecsPassed) / 60) 
+        pbSecsToGo = Int((pbWaitTime - pbSecsPassed) - (pbMinsToGo * 60)) 
+        if pbSecsToGo < 10 then 
+            pbSecsToGo = "0" & pbSecsToGo  
+        end if 
+        pbLoadedWidth = (pbSecsPassed / pbWaittime) * pbWidth 
+        pbUnloadedWidth = pbWidth - pbLoadedWidth 
+        pbHTML = pbHTML & "<table border=1 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Please wait ... <br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Install Time : 10 Minutes<br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Uninstall Time : 3.5 Minutes<br><br></td>" 		
+        pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+       if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
+            StopTimer 
+       end if 
+    End Sub 
+	
+	  
+    Sub StopTimer 
+        'window.clearInterval(PBTimerID)
+		'window.close(PBTimerID)
+		 window.location.reload()
+    End Sub 
+	
+	''''''''''''''''''''''''
+    Dim dtmStartTime
+
+    Sub Test 'this is called after button click
+        dtmStartTime = Now 
+        idTimer = window.setTimeout("PausedSection", 2000, "VBScript") 'this waits for a while before calling the wait function
+    End Sub
+
+    Sub PausedSection
+        'Msgbox dtmStartTime & vbCrLf & Now
+        'window.clearTimeout(idTimer)
+		set objWMIService = GetObject ("winmgmts:")
+		foundProc = False
+		procName="notepad.exe"
+		procNameFriend="Word"
+
+		for each Process in objWMIService.InstancesOf("Win32_Process")
+		If StrComp(Process.Name,procName,vbTextCompare)=0 then
+		foundProc=true
+		End If
+		Next
+		
+		Do
+			pbWaitTime = 5         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 5)
+			StopTimer 
+		Loop While foundProc = true
+    End Sub
+
+</script>
+
+<body>
+    <input id=runbutton  type="button" value="Run Button" onClick="Test">
+	<div id="statbar"></div>
+</body>

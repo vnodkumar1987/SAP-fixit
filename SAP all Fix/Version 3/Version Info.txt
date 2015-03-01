@@ -1,0 +1,13 @@
++
+	New UI
+	Location Detection	
+	Install From sever
+	Progress Bar with Unistall
++
+	Context menu disabled
+	Delay script can be inclded now // 
+http://blogs.technet.com/b/heyscriptingguy/archive/2006/03/30/how-can-i-temporarily-pause-a-script-in-an-hta.aspx
+	
+	
+-
+	Install from server progress not synced with progress bar
