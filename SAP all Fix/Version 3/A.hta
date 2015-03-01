@@ -133,7 +133,8 @@ a{
     End Sub 
 	
 	Sub DELREG
-		'remove registry now
+		'remove registry now called from Uninstall script
+		
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
@@ -153,6 +154,23 @@ a{
 		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
 		'WshShell.run "cmd /k /q  & REG DELETE HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs /v C:\Windows\System32\SAPbtmp.dll /f & exit"
 		
+		set objWMIService = GetObject ("winmgmts:")
+		foundProc = False
+		procName="notepad.exe" 'rename notepad.exe with nwsapsetup.exe
+		procNameFriend="SAP SETUP"
+
+		for each Process in objWMIService.InstancesOf("Win32_Process")
+		If StrComp(Process.Name,procName,vbTextCompare)=0 then
+		foundProc=true
+		End If
+		Next
+		If foundProc = false Then
+			MsgBox "SAP Uninstalled, Please restart your computer !"
+		End If
+		If foundProc = True Then
+			MsgBox "STill not uninstalled, make it more interactive"
+		End If
+		
 		window.clearTimeout(idTimer)
 	End Sub
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -167,7 +185,7 @@ a{
 		strValue = """C:\Program Files (x86)\Common Files\SAP Shared\BW\sapbex.xla"""
 		oReg.SetStringValue HKEY_CURRENT_USER,strKeyPath,strValueName,strValue
 		
-		MsgBox "Please reopen Excel 2010"
+		MsgBox "BEx Addin added, Please reopen Excel 2010"
 			
 	End Sub
 	
@@ -195,6 +213,7 @@ a{
 			If (FSO.FileExists("C:\Windows\System32\drivers\etc\services.old")) Then
 				'FSO.MoveFile "C:\Windows\System32\drivers\etc\services", "C:\Windows\System32\drivers\etc\services.old"
 				FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
+				'FSO.MoveFile "C:\windows\System32\drivers\etc\services", "C:\windows\System32\drivers\etc\services.old"
 				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
 			Else
 					If (FSO.FileExists("C:\windows\System32\drivers\etc\services")) Then
@@ -245,7 +264,7 @@ a{
 	
 	'Uninstall SAP
 	Sub doUNINS
-		pbWaitTime = 200         ' How many seconds the progress bar lasts 
+		pbWaitTime = 200        ' How many seconds the progress bar lasts 
 		pbHeight = 20        ' Progress bar height 
 		pbWidth= 600         ' Progress bar width 
 		pbUnloadedColor="white"        ' Color of unloaded area 
@@ -260,7 +279,7 @@ a{
 		set WshShell = CreateObject("WScript.shell")
 		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent")
 		
-		' pause for uninstall to complete
+		' Pause before removing registry
 		
 		dstart = Now
 		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
@@ -268,7 +287,8 @@ a{
 	End Sub
 	
 	'Install SAP now
-	'Install from Noida Share
+	
+	'Sub for SAP 720
 	Sub INS720
 		If loc_720(1).selected Then
 			pbWaitTime = 20         ' How many seconds the progress bar lasts 
@@ -283,6 +303,8 @@ a{
 			msgbox "SAP 720 from Noida"
 		End If
 	End Sub
+	
+	'Sub for SAP 730
 	Sub INS730
 		If loc_730(1).selected Then
 			pbWaitTime = 20         ' How many seconds the progress bar lasts 
@@ -295,7 +317,7 @@ a{
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 10) 
 			set WshShell = CreateObject("WScript.shell")
-			WshShell.run ("""C:\Users\labuser\Desktop\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1""")
+			WshShell.run ("""C:\Users\labuser\Desktop\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
 		End If
 	End Sub
 	
