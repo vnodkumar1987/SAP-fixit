@@ -132,8 +132,27 @@ a{
 		 window.location.reload()
     End Sub 
 	
-	Sub pausedtime
-		Msgbox "hello after 5 secs"
+	Sub DELREG
+		'remove registry now
+		On Error Resume Next
+		dim WshShell
+		set WshShell = CreateObject("WScript.shell")
+
+		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
+		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
+
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPGUI710\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP_WUS\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPBI\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP Channel Encryption\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2385C070-EC26-4AB9-8718-E605C977C0ED}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{A47A9101-6EB5-4314-BDA1-297880FBB908}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{CEC7A786-A9C8-4EF7-BB59-6518E3B3C878}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{196467F1-C11F-4F76-858B-5812ADC83B94}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{44D66AD9-AE19-4AFD-BE7E-A1B44C856697}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
+		'WshShell.run "cmd /k /q  & REG DELETE HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs /v C:\Windows\System32\SAPbtmp.dll /f & exit"
+		
 		window.clearTimeout(idTimer)
 	End Sub
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''
@@ -147,6 +166,8 @@ a{
 		strValueName = "OPEN"
 		strValue = """C:\Program Files (x86)\Common Files\SAP Shared\BW\sapbex.xla"""
 		oReg.SetStringValue HKEY_CURRENT_USER,strKeyPath,strValueName,strValue
+		
+		MsgBox "Please reopen Excel 2010"
 			
 	End Sub
 	
@@ -224,7 +245,7 @@ a{
 	
 	'Uninstall SAP
 	Sub doUNINS
-		pbWaitTime = 20         ' How many seconds the progress bar lasts 
+		pbWaitTime = 200         ' How many seconds the progress bar lasts 
 		pbHeight = 20        ' Progress bar height 
 		pbWidth= 600         ' Progress bar width 
 		pbUnloadedColor="white"        ' Color of unloaded area 
@@ -234,8 +255,6 @@ a{
 		rProgressbar 
 		pbTimerID = window.setInterval("rProgressbar", 10)
 		
-		
-		
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
@@ -244,24 +263,8 @@ a{
 		' pause for uninstall to complete
 		
 		dstart = Now
-		idTimer = window.setTimeOut("pausedtime", 5000, "VBScript")
-		
-		'removing registry
-		
-		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
-		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
-
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPGUI710\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP_WUS\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPBI\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP Channel Encryption\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2385C070-EC26-4AB9-8718-E605C977C0ED}\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{A47A9101-6EB5-4314-BDA1-297880FBB908}\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{CEC7A786-A9C8-4EF7-BB59-6518E3B3C878}\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{196467F1-C11F-4F76-858B-5812ADC83B94}\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{44D66AD9-AE19-4AFD-BE7E-A1B44C856697}\"
-		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
-		'WshShell.run "cmd /k /q  & REG DELETE HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\SharedDLLs /v C:\Windows\System32\SAPbtmp.dll /f & exit"
+		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
+	
 	End Sub
 	
 	'Install SAP now
