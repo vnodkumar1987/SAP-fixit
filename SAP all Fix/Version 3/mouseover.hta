@@ -1,0 +1,39 @@
+<HTML>
+   <HEAD>
+      <title>Toggle Color</title>
+      <hta:application
+      windowstate="normal"
+      >
+   </HEAD>
+
+   <SCRIPT Language="VBScript">
+      Sub toggleColor
+
+         If helloWorld.userValue = 1 Then
+            helloWorld.innerHTML = "Red"
+            helloWorld.userValue = 2
+         ElseIf helloWorld.userValue = 2 Then
+            helloWorld.innerHTML = "Green"
+            helloWorld.userValue = 1
+         End If
+
+      End Sub
+      Sub domouserin()
+          helloWorld.style.color=Trim(helloWorld.innerHTML)
+      End Sub
+      Sub domouserout()
+          helloWorld.style.color="black"
+      End Sub
+   </SCRIPT>
+
+   <BODY>
+      <table>
+          <tr>
+               <td id="helloWorld" language="vbscript" onmouseover="domouserin" 
+                    onmouseout="domouserout" userValue="1">Green
+               </td>
+          </tr>
+     </table>
+     <input type="button" value="Toggle" onClick="toggleColor">
+   </BODY>
+</html>

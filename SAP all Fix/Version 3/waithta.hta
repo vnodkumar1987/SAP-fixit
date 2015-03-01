@@ -77,8 +77,16 @@
 		Next
 		
 		Do
-			 msgbox "done"
-		Loop While foundProc = true
+			pbWaitTime = 5         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 5)
+		Loop While foundProc = false
     End Sub
 
 </script>

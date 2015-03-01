@@ -11,3 +11,4 @@ http://blogs.technet.com/b/heyscriptingguy/archive/2006/03/30/how-can-i-temporar
 	
 -
 	Install from server progress not synced with progress bar
+-	Add mousein mouseout effects to buttons..refer mouseover.hta

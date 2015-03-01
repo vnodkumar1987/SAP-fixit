@@ -77,7 +77,7 @@
 		Next
 		
 		Do
-			pbWaitTime = 500         ' How many seconds the progress bar lasts 
+			pbWaitTime = 5         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
 			pbUnloadedColor="white"        ' Color of unloaded area 
@@ -87,7 +87,7 @@
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 5)
 			StopTimer 
-		Loop Until foundProc = false
+		Loop While foundProc = true
     End Sub
 
 </script>
