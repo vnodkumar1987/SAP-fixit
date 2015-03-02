@@ -1,0 +1,15 @@
+<convert2exe>
+    <path>C:\Users\labuser\Desktop\est.exe</path>
+    <uacLevel>requireAdministrator</uacLevel>
+    <icon></icon>
+    <mode>wscript</mode>
+    <silent>no</silent>
+    <unicode>no</unicode>
+    <build>64bit</build>
+    <details>
+        <version>1.0.0.0</version>
+        <description></description>
+        <productName>testing.hta</productName>
+        <copyright>Copyright (C) 2015</copyright>
+    </details>
+</convert2exe>

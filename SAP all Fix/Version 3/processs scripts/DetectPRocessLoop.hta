@@ -61,7 +61,20 @@
         dtmStartTime = Now 
         idTimer = window.setTimeout("PausedSection", 2000, "VBScript") 'this waits for a while before calling the wait function
     End Sub
-
+	Sub monpro
+		strComputer = "."
+		Set objWMIService = GetObject("winmgmts:" _
+			& "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+		Set colMonitoredProcesses = objWMIService. _        
+			ExecNotificationQuery("select 'notepad.exe' from __instancecreationevent " _ 
+				& " within 1 where TargetInstance isa 'Win32_Process'")
+		i = 0
+		Do While i = 0
+			Set objLatestProcess = colMonitoredProcesses.NextEvent
+			dtmStartTime = Now 
+			Msgbox "done"
+		Loop
+	End Sub
     Sub PausedSection
         'Msgbox dtmStartTime & vbCrLf & Now
         'window.clearTimeout(idTimer)

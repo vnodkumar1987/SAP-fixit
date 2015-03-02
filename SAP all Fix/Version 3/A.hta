@@ -7,7 +7,7 @@
      SINGLEINSTANCE="YES"
 	 MAXIMIZEBUTTON="NO"
 	 MINIMIZEBUTTON="NO"
-	 'ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
+	 ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
 	 INNERBORDER="YES"
 	 SHOWINTASKBAR="YES"
 	 SCROLLFLAT="NO"
@@ -81,11 +81,20 @@ a{
 </head> 
 
 <SCRIPT Language="VBScript">
+
 	'This defines the window size
 	Sub Window_onLoad
         window.resizeTo 650,250
+    End Sub
+	
+	'This is to reload the UI
+    Sub StopTimer 
+		 window.location.reload()
     End Sub 
 	
+	'**********************************************************
+	'*************** NOTIFICATIONS ****************************
+	'**********************************************************
 	'Sub to notify the addition of BEx Addin
 	Sub NOTIFYADDIN
 		pbHTML = "" 
@@ -142,8 +151,7 @@ a{
 		idTimer = window.setTimeOut("StopTimer", 5000, "VBScript")
 	
 	End Sub
-		
-		
+	
 	'ProgressBar subroutine
 	''''''''''''''''''''''''''''''''''''''''''''''''''''''
 	Dim pbTimerID 
@@ -182,11 +190,39 @@ a{
             StopTimer 
        end if 
     End Sub 
-     
-    Sub StopTimer 
-		 window.location.reload()
-    End Sub 
+    
+	'**********************************************************
+	'*************** NOTIFICATIONS ****************************
+	'**********************************************************
 	
+	'**********************************************************
+	'*************** UNINSTALLATION ****************************
+	'**********************************************************
+	'Routine to call EXE uninstaller
+	Sub doUNINS
+		pbWaitTime = 240        ' How many seconds the progress bar lasts 
+		pbHeight = 20        ' Progress bar height 
+		pbWidth= 600         ' Progress bar width 
+		pbUnloadedColor="white"        ' Color of unloaded area 
+		pbLoadedColor="black"        ' Color of loaded area 
+		pbBorder="grey"        ' Color of Progress bar border 
+		pbStartTime = Now 
+		rProgressbar 
+		pbTimerID = window.setInterval("rProgressbar", 10)
+		
+		On Error Resume Next
+		dim WshShell
+		set WshShell = CreateObject("WScript.shell")
+		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent")
+		
+		' Pause before removing registry
+		
+		dstart = Now
+		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
+	
+	End Sub
+	
+	'Routine to remove registry
 	Sub DELREG
 		'remove registry now called from Uninstall script
 		
@@ -226,12 +262,20 @@ a{
 			'OKOK
 		End If
 		If foundProc = True Then
-			MsgBox "STill not uninstalled, make it more interactive"
+			MsgBox "Sorry it is taking longer :("
 		End If
 		
 		window.clearTimeout(idTimer)
 	End Sub
-	''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	
+	'**********************************************************
+	'*************** UNINSTALLATION ****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** BEx Addin ****************************
+	'**********************************************************
+	
 	'Add BEx script here
 	Sub doBEx
 		Const HKEY_CURRENT_USER = &H80000001
@@ -247,6 +291,13 @@ a{
 			
 	End Sub
 	
+	'**********************************************************
+	'*************** BEx Addin ****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** Copy INI Files****************************
+	'**********************************************************
 	'Create connections
 	Sub doINI
 	On error resume next 'remove this later 
@@ -323,36 +374,17 @@ a{
 			NOTIFYINI
 	End Sub
 	
-	'Uninstall SAP
-	Sub doUNINS
-		pbWaitTime = 200        ' How many seconds the progress bar lasts 
-		pbHeight = 20        ' Progress bar height 
-		pbWidth= 600         ' Progress bar width 
-		pbUnloadedColor="white"        ' Color of unloaded area 
-		pbLoadedColor="black"        ' Color of loaded area 
-		pbBorder="grey"        ' Color of Progress bar border 
-		pbStartTime = Now 
-		rProgressbar 
-		pbTimerID = window.setInterval("rProgressbar", 10)
-		
-		On Error Resume Next
-		dim WshShell
-		set WshShell = CreateObject("WScript.shell")
-		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /all /noDlg /Silent")
-		
-		' Pause before removing registry
-		
-		dstart = Now
-		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
+	'**********************************************************
+	'*************** Copy INI Files****************************
+	'**********************************************************
 	
-	End Sub
-	
-	'Install SAP now
-	
+	'**********************************************************
+	'*************** INSTALLATION ****************************
+	'**********************************************************
 	'Sub for SAP 720
 	Sub INS720
 		If loc_720(1).selected Then
-			pbWaitTime = 20         ' How many seconds the progress bar lasts 
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
 			pbUnloadedColor="white"        ' Color of unloaded area 
@@ -360,15 +392,94 @@ a{
 			pbBorder="grey"        ' Color of Progress bar border 
 			pbStartTime = Now 
 			rProgressbar 
-			pbTimerID = window.setInterval("rProgressbar", 10) 
-			msgbox "SAP 720 from Noida"
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			WshShell = CreateObject("WScript.shell")			
+			WshShell.run ("""\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(2).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(3).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")			
+			WshShell.run ("""\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(4).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(5).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(6).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_720(7).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\seashare.sea.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
 		End If
 	End Sub
 	
 	'Sub for SAP 730
 	Sub INS730
 		If loc_730(1).selected Then
-			pbWaitTime = 20         ' How many seconds the progress bar lasts 
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
 			pbUnloadedColor="white"        ' Color of unloaded area 
@@ -376,12 +487,92 @@ a{
 			pbBorder="grey"        ' Color of Progress bar border 
 			pbStartTime = Now 
 			rProgressbar 
-			pbTimerID = window.setInterval("rProgressbar", 10) 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			WshShell = CreateObject("WScript.shell")			
+			WshShell.run ("""\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(2).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
 			set WshShell = CreateObject("WScript.shell")
-			WshShell.run ("""C:\Users\labuser\Desktop\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+			WshShell.run ("""\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(3).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")			
+			WshShell.run ("""\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(4).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(5).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(6).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
+		End If
+		If loc_730(7).selected Then
+			pbWaitTime = 600         ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+			set WshShell = CreateObject("WScript.shell")
+			WshShell.run ("""\\seashare.sea.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
 		End If
 	End Sub
-	
+	'**********************************************************
+	'*************** INSTALLATION ****************************
+	'**********************************************************
 </SCRIPT> 
 
 <body>
@@ -416,32 +607,26 @@ a{
 				<p> SAP 720</p>
 					<select name="loc_720" onChange="INS720">
 						<option value="0" Selected>Choose your location</option>
-						<option value="1">Noida</option>
-						<option value="2">Bangalore</option>
-						<option value="3">SAN Jose</option>
-						<option value="4">SAN Francisco</option>
-						<option value="5">Ottawa</option>
-						<option value="6">Seattle</option>
-						<option value="7">London</option>
-						<option value="8">EMEA</option>
-						<option value="9">Tokyo</option>
-						<option value="10">Singapore</option>
+						<option value="1">APAC</option>
+						<option value="2">EMEA</option>
+						<option value="3">INDIA</option>
+						<option value="4">LEHI</option>
+						<option value="5">OTTAWA</option>
+						<option value="6">SAN JOSE</option>
+						<option value="7">SEATTLE</option>
 			</select>
 			</div>
 			<div id="730">  <!-- Select location for SAP 730 -->
 				<p> SAP 730</p> 
 				<select name="loc_730" onChange="INS730">
 						<option value="0" Selected>Choose your location</option>
-						<option value="1">Noida</option>
-						<option value="2">Bangalore</option>
-						<option value="3">SAN Jose</option>
-						<option value="4">SAN Francisco</option>
-						<option value="5">Ottawa</option>
-						<option value="6">Seattle</option>
-						<option value="7">London</option>
-						<option value="8">EMEA</option>
-						<option value="9">Tokyo</option>
-						<option value="10">Singapore</option>
+						<option value="1">APAC</option>
+						<option value="2">EMEA</option>
+						<option value="3">INDIA</option>
+						<option value="4">LEHI</option>
+						<option value="5">OTTAWA</option>
+						<option value="6">SAN JOSE</option>
+						<option value="7">SEATTLE</option>
 			</select>
 			</div>
 
