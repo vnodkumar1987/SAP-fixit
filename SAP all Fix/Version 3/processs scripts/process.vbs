@@ -2,7 +2,7 @@ strComputer = "."
 Set objWMIService = GetObject("winmgmts:" _
     & "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
 Set colMonitoredProcesses = objWMIService. _        
-    ExecNotificationQuery("select 'notepad.exe' from __instancecreationevent " _ 
+    ExecNotificationQuery("select * from __instancecreationevent " _ 
         & " within 1 where TargetInstance isa 'Win32_Process'")
 i = 0
 Do While i = 0

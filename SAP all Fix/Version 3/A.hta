@@ -183,7 +183,7 @@ a{
 		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
 		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Install Time : 10 Minutes<br><br></td>"
 		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
-		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Uninstall Time : 3.5 Minutes<br><br></td>" 		
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Uninstall Time : 4 Minutes<br><br></td>" 		
         pbHTML = pbHTML & "</tr></table>" 
         statbar.InnerHTML = pbHTML 
        if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
@@ -384,6 +384,7 @@ a{
 	'Sub for SAP 720
 	Sub INS720
 		If loc_720(1).selected Then
+		On Error Resume Next
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -393,10 +394,12 @@ a{
 			pbStartTime = Now 
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 10)
-			WshShell = CreateObject("WScript.shell")			
+			set WshShell = CreateObject("WScript.shell")			
 			WshShell.run ("""\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(2).selected Then
+			'giving issues
+			
+		'End If
+		ElseIf loc_720(2).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -408,8 +411,9 @@ a{
 			pbTimerID = window.setInterval("rProgressbar", 10)
 			set WshShell = CreateObject("WScript.shell")
 			WshShell.run ("""\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(3).selected Then
+			'giving issues
+		'End If
+		ElseIf loc_720(3).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -421,8 +425,8 @@ a{
 			pbTimerID = window.setInterval("rProgressbar", 10)
 			set WshShell = CreateObject("WScript.shell")			
 			WshShell.run ("""\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(4).selected Then
+		'End If
+		ElseIf loc_720(4).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -431,11 +435,11 @@ a{
 			pbBorder="grey"        ' Color of Progress bar border 
 			pbStartTime = Now 
 			rProgressbar 
-			pbTimerID = window.setInterval("rProgressbar", 10)
+			pbTimerID = window.setInterval("rProgressbar", 60)
 			set WshShell = CreateObject("WScript.shell")
 			WshShell.run ("""\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(5).selected Then
+		'End If
+		ElseIf loc_720(5).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -447,8 +451,8 @@ a{
 			pbTimerID = window.setInterval("rProgressbar", 10)
 			set WshShell = CreateObject("WScript.shell")
 			WshShell.run ("""\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(6).selected Then
+		'End If
+		ElseIf loc_720(6).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -460,8 +464,8 @@ a{
 			pbTimerID = window.setInterval("rProgressbar", 10)
 			set WshShell = CreateObject("WScript.shell")
 			WshShell.run ("""\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
-		End If
-		If loc_720(7).selected Then
+		'End If
+		ElseIf loc_720(7).selected Then
 			pbWaitTime = 600         ' How many seconds the progress bar lasts 
 			pbHeight = 20        ' Progress bar height 
 			pbWidth= 600         ' Progress bar width 
@@ -488,7 +492,7 @@ a{
 			pbStartTime = Now 
 			rProgressbar 
 			pbTimerID = window.setInterval("rProgressbar", 10)
-			WshShell = CreateObject("WScript.shell")			
+			set WshShell = CreateObject("WScript.shell")		
 			WshShell.run ("""\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\Setup\NwSapSetup.exe"" /package=""Adobe_V1"" /noDlg")
 		End If
 		If loc_730(2).selected Then
