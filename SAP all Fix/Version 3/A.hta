@@ -225,6 +225,16 @@ a{
 		rProgressbar 
 		pbTimerID = window.setInterval("rProgressbar", 10)
 		
+		'end running instances of SAP
+		strComputer = "."
+		Set objWMIService = GetObject("winmgmts:" _
+		& "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+		Set colProcessList = objWMIService.ExecQuery _
+		("SELECT * FROM Win32_Process WHERE Name = 'saplogon.exe'")
+		For Each objProcess in colProcessList
+		objProcess.Terminate()
+		Next
+		
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
@@ -738,7 +748,7 @@ a{
 		<div id="install"> <!-- This is install div-->
 			
 			<div id="install_menu"> <!-- This is install menu -->
-				<span>SAP install Menu </span>
+				<span>SAP Install Menu </span>
 			</div>
 	
 			<div id="720"> <!-- Select location for SAP 720 -->
