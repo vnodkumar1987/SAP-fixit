@@ -1,0 +1,90 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Marquee</title>
+<script language="vbscript">
+
+</script>
+<hta:application
+	applicationname="MyHTA"	
+	border="dialog"
+	borderstyle="normal"
+	caption="My HTML Application"
+	contextmenu="no"
+	icon="myicon.ico"
+	maximizebutton="no"
+	minimizebutton="yes"
+	navigable="no"
+	scroll="no"
+	selection="no"
+	showintaskbar="yes"
+	singleinstance="yes"
+	sysmenu="yes"
+	version="1.0"
+	windowstate="normal"
+>
+</head>
+<style type="text/css"> 
+     body {
+     	background:	buttonface;
+     	font:		MessageBox;
+     	font:		Message-Box;
+     }
+     marquee {
+     	border:		1px solid ButtonShadow;
+     	background:	Window;
+     	height:		13px;
+     	font-size:	1px;
+     	margin:		1px;
+     	width:		147px;
+     
+     	display:		block;
+     	overflow:		hidden;
+     }
+      
+     marquee span {
+     	height:			8px;
+     	margin:			1px;
+     	width:			6px;
+     	background:		Highlight;
+     	float:			left;
+     	font-size:		1px;
+     }
+      
+     .progressBarHandle-0 {
+     	filter:		alpha(opacity=20);
+     	-moz-opacity:	0.20;
+     }
+      
+     .progressBarHandle-1 {
+     	filter: alpha(opacity=40);
+     	-moz-opacity: 0.40;
+     }
+      
+     .progressBarHandle-2 {
+     	filter: alpha(opacity=60);
+     	-moz-opacity: 0.6;
+     }
+      
+     .progressBarHandle-3 {
+     	filter: alpha(opacity=80);
+     	-moz-opacity: 0.8;
+     }
+      
+     .progressBarHandle-4 {
+     	filter: alpha(opacity=100);
+     	-moz-opacity:	1;	
+     }
+      
+</style>
+<body>
+<div style="position: absolute; left: 40%; top: 50%;">
+    <marquee direction="right" scrollamount="8" scrolldelay="100">
+	<span class="progressBarHandle-0"></span>
+	<span class="progressBarHandle-1"></span>
+	<span class="progressBarHandle-2"></span>
+	<span class="progressBarHandle-3"></span>
+	<span class="progressBarHandle-4"></span></marquee>
+</div>
+</html>

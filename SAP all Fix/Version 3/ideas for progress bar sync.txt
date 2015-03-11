@@ -1,0 +1,31 @@
+to sync install status with progress bar
+
+	show progress bar with x minutes while it is caching the installer
+	once the process is started......call function to add +y minutes, so that progress bar runs for x+y minutes
+	once the process terminates ... call reload
+	
+	find a way to attach the progress bar to attach to process
+	
+	
+	
+	
+	A.HTA & DetectProcessLoop.HTA is where i am working once
+	having some issues with Install Script at the moment
+	
+	
+	
+	http://www.activexperts.com/activmonitor/windowsmanagement/adminscripts/monitoring/processes/
+	
+	https://technet.microsoft.com/en-us/library/ee692845.aspx
+	
+	
+	
+	APAC	\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"  
+EMEA	\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
+India	\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
+Lehi	\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
+Ottawa	\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
+San Jose
+\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
+
+Seattle	\\seashare.sea.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\Setup\NwSapSetup.exe /Package="Adobe_V1"
