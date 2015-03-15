@@ -1,0 +1,1 @@
+Need to either copy the setup folder in temp or delete the setup folder after setup

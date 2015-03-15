@@ -230,22 +230,13 @@ a{
 		rProgressbar 
 		pbTimerID = window.setInterval("rProgressbar", 10)
 		
-		'end running instances of SAP
-		strComputer = "."
-		Set objWMIService = GetObject("winmgmts:" _
-		& "{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
-		Set colProcessList = objWMIService.ExecQuery _
-		("SELECT * FROM Win32_Process WHERE Name = 'saplogon.exe'")
-		For Each objProcess in colProcessList
-		objProcess.Terminate()
-		Next
-		
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
+		WshShell.run ("Taskkill /IM saplogon.exe /F") 'End process
 		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /noDlg /package=""Adobe_V1""")
 		
-		'Pause before removing registry
+		'Waiting for uninstall to complete
 		
 		dstart = Now
 		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
