@@ -248,9 +248,18 @@ a{
 		On Error Resume Next
 		dim WshShell
 		set WshShell = CreateObject("WScript.shell")
-		WshShell.run ("Taskkill /IM saplogon.exe /F") 'End process
-		WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /noDlg /package=""Adobe_V1""")
+		WshShell.run ("Taskkill /IM saplogon.exe /F") 'This is to kill task but might need to switch to WMI script for better performance
 		
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /noDlg /package=""Adobe_V1""")
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /product=""SapBI""")
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /product=""ECL710+SAPDTS+BW350+KW710+GUI710ISHMED+GUI710TWEAK+JNet+SAPGUI710"" /TitleComponent:""SAPGUI710"" /IgnoreMissingProducts")
+		WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /noDlg /product=""ECL710+SAPDTS+BW350+KW710+GUI710ISHMED+GUI710TWEAK+JNet+SAPGUI710+SapBI"" /TitleComponent:""SAPGUI710"" /IgnoreMissingProducts")
+		
+		Dim FSO
+		Set FSO = CreateObject("Scripting.FileSystemObject")
+		FSO.DeleteFolder("C:\ProgramData\Microsoft\Windows\Start Menu\Programs\SAP Front End")
+		
+		'Delete this folder C:\ProgramData\Microsoft\Windows\Start Menu\Programs
 		'Waiting for uninstall to complete
 		
 		dstart = Now
