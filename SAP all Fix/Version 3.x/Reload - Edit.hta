@@ -1,5 +1,5 @@
 <head>
-<title>SAP Fixit V2</title>
+<title>SAP Fixit</title>
 
 <HTA:APPLICATION 
      APPLICATIONNAME="SAP Uninstaller & Configurator"
@@ -7,7 +7,8 @@
      SINGLEINSTANCE="YES"
 	 MAXIMIZEBUTTON="NO"
 	 MINIMIZEBUTTON="NO"
-	 ICON="\\indshare\users_p\pun\public\SAP\favicon.ico"
+
+	 ICON="favicon.ico"
 	 INNERBORDER="YES"
 	 SHOWINTASKBAR="YES"
 	 SCROLLFLAT="NO"
@@ -258,8 +259,10 @@ a{
 		Dim FSO
 		Set FSO = CreateObject("Scripting.FileSystemObject")
 		FSO.DeleteFolder("C:\ProgramData\Microsoft\Windows\Start Menu\Programs\SAP Front End")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\Business Explorer")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\FrontEnd")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\SapSetup")
 		
-		'Delete this folder C:\ProgramData\Microsoft\Windows\Start Menu\Programs
 		'Waiting for uninstall to complete
 		
 		dstart = Now
