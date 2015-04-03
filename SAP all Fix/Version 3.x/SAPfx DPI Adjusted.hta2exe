@@ -1,0 +1,14 @@
+<convert2exe>
+    <path>C:\Users\labuser\Documents\GitHub\SAP-fixit\SAP all Fix\Version 3.x\SAPfx.exe</path>
+    <uacLevel>requireAdministrator</uacLevel>
+    <dependencies>
+        <dependency>favicon.ico</dependency>
+    </dependencies>
+    <build>32bit</build>
+    <details>
+        <version>3.3.0.0</version>
+        <description>SAPfx</description>
+        <productName></productName>
+        <copyright>Copyright (C) 2015</copyright>
+    </details>
+</convert2exe>
