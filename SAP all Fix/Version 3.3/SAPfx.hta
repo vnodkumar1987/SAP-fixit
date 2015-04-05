@@ -1,0 +1,831 @@
+<head>
+<title>SAP Fixit</title>
+
+<HTA:APPLICATION 
+     APPLICATIONNAME="SAP Uninstaller & Configurator"
+     SCROLL="NO"
+     SINGLEINSTANCE="YES"
+	 MAXIMIZEBUTTON="NO"
+	 MINIMIZEBUTTON="NO"
+
+	 ICON="favicon.ico"
+	 INNERBORDER="YES"
+	 SHOWINTASKBAR="YES"
+	 SCROLLFLAT="NO"
+
+	 CONTEXTMENU="NO"
+>
+<style>
+body{
+	background: gray;
+	color: white;
+	font-size: 19px;
+}
+
+.btn{
+	width: 200px;
+	height: 40px;
+	border: 2px solid white;
+	margin-top: 20px;
+	margin-left: 25px;
+	padding: 5px;
+	text-align: center;
+	line-height: 35px;
+	background: #f2f3f4;
+	color: #010101;
+}
+
+a{
+	text-decoration: none;
+	cursor: pointer;
+	color: white;
+}
+
+#install{
+	align: right;
+	margin-left: 270px;
+	margin-top: -170px;
+}
+
+#install span{
+	width: 200px;
+	height: 45px;
+	text-align: center;	
+	margin-left: 60px;
+	background: #f2f3f4;
+	color: black;
+	line-height: 40px;
+	border: 1px solid white;
+}
+
+#720 p, #730 p{
+	width: 150px;
+	height: 30px;
+	text-align: center;
+	line-height: 30px;
+	background: #f2f3f4;
+	color: black;
+	border: 2px solid white;
+}
+#720{
+	align: left;
+}
+#730{
+	align: right;
+	margin-left: 190px;
+	margin-top: -95px;
+}
+
+#SD{
+	color: yellow;
+	font-size: 15;
+	bottom: 3px;
+	margin-left: 50px;
+	position: absolute;
+}
+
+</style>
+</head> 
+
+<SCRIPT Language="VBScript">
+
+	'This defines the window size
+	Sub Window_onLoad
+        'window.resizeTo 650,250
+        window.resizeTo 685,300
+    End Sub
+	
+	'This is to reload the UI
+    Sub RELOAD 
+		 window.location.reload()
+    End Sub 
+	'**********************************************************
+	'*************** MOUSE IN OUT ****************************
+	'**********************************************************
+	Sub bexon()
+		  addin.style.background="#C5C4AC"
+    End Sub
+    Sub bexoff()
+          addin.style.background="#f2f3f4"
+    End Sub
+	Sub inion()
+		  ini.style.background="#C5C4AC"
+    End Sub
+    Sub inioff()
+		  ini.style.background="#f2f3f4"
+    End Sub
+	Sub uninson()
+		  uninstall.style.background="#C5C4AC"
+    End Sub
+    Sub uninsoff()
+		  uninstall.style.background="#f2f3f4"
+    End Sub
+	'**********************************************************
+	'*************** NOTIFICATIONS ****************************
+	'**********************************************************
+	'Sub to notify the addition of BEx Addin
+	Sub NOTIFYADDIN
+		pbHTML = "" 
+        pbHTML = pbHTML & "<table border=0 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>BEx Addin Added</b></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Please reopen Excel 2010</b></td>"
+		pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+		
+		dstart = Now
+		idTimer = window.setTimeOut("RELOAD", 5000, "VBScript")
+	
+	End Sub
+	
+	'Sub to notify the copy if INI files
+	Sub NOTIFYINI
+		pbHTML = "" 
+        pbHTML = pbHTML & "<table border=0 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>INI files copied successfully</b></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Please reopen SAP logon</b></td>"
+		pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+		
+		dstart = Now
+		idTimer = window.setTimeOut("RELOAD", 5000, "VBScript")
+	
+	End Sub
+	
+	'Subroutine to show the download of SAP installation files
+	Sub PREINSTALL
+		pbHTML = "" 
+        pbHTML = pbHTML & "<table border=0 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Please wait while installation files are being copied</b></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Estimated Download Time : 10 Minutes</b></td>"
+		pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+		
+	End Sub
+	'Sub to notify the copy if INI files
+	Sub OKOK
+		pbHTML = "" 
+        pbHTML = pbHTML & "<table border=0 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Done</b></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & "><b>Please restart your computer</b></td>"
+		pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+		
+		dstart = Now
+		idTimer = window.setTimeOut("RELOAD", 5000, "VBScript")
+	
+	End Sub
+	
+	'ProgressBar subroutine
+	''''''''''''''''''''''''''''''''''''''''''''''''''''''
+	Dim pbTimerID 
+    Dim pbHTML  
+    Dim pbWaitTime 
+    Dim pbHeight 
+    Dim pbWidth 
+    Dim pbBorder 
+    Dim pbUnloadedColor 
+    Dim pbLoadedColor 
+    Dim pbStartTime
+	
+	Sub rProgressbar 
+        pbHTML = "" 
+        pbSecsPassed = DateDiff("s",pbStartTime,Now) 
+        pbMinsToGo =  Int((pbWaitTime - pbSecsPassed) / 60) 
+        pbSecsToGo = Int((pbWaitTime - pbSecsPassed) - (pbMinsToGo * 60)) 
+        if pbSecsToGo < 10 then 
+            pbSecsToGo = "0" & pbSecsToGo  
+        end if 
+        pbLoadedWidth = (pbSecsPassed / pbWaittime) * pbWidth 
+        pbUnloadedWidth = pbWidth - pbLoadedWidth 
+        pbHTML = pbHTML & "<table border=1 bordercolor=" & pbBorder & " cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<th width=" & pbLoadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbLoadedColor & "></th>" 
+        pbHTML = pbHTML & "<th width=" & pbUnloadedWidth & " height=" & pbHeight & "align=left bgcolor="  & pbUnLoadedColor & "></th>" 
+        pbHTML = pbHTML & "</tr></table><br>" 
+        pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+        pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Please wait ... <br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Install Time : 5 Minutes<br><br></td>"
+		pbHTML = pbHTML & "<table border=0 cellpadding=0 cellspacing=0 width=" & pbWidth & "><tr>" 
+		pbHTML = pbHTML & "<td align=center width=" & pbWidth & "% height=" & pbHeight & ">Estimated Uninstall Time : 4 Minutes<br><br></td>" 		
+        pbHTML = pbHTML & "</tr></table>" 
+        statbar.InnerHTML = pbHTML 
+       if DateDiff("s",pbStartTime,Now) >= pbWaitTime then 
+            RELOAD 
+       end if 
+    End Sub 
+    
+	'**********************************************************
+	'*************** NOTIFICATIONS ****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** UNINSTALLATION ****************************
+	'**********************************************************
+	'Routine to call EXE uninstaller
+	Sub doUNINS
+		pbWaitTime = 240        ' How many seconds the progress bar lasts 
+		pbHeight = 20        ' Progress bar height 
+		pbWidth= 640         ' Progress bar width 
+		pbUnloadedColor="white"        ' Color of unloaded area 
+		pbLoadedColor="black"        ' Color of loaded area 
+		pbBorder="grey"        ' Color of Progress bar border 
+		pbStartTime = Now 
+		rProgressbar 
+		pbTimerID = window.setInterval("rProgressbar", 10)
+		
+		On Error Resume Next
+		dim WshShell
+		set WshShell = CreateObject("WScript.shell")
+		WshShell.run ("Taskkill /IM saplogon.exe /F") 'This is to kill task but might need to switch to WMI script for better performance
+		
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SapSetup\setup\NwSapSetup.exe"" /Uninstall /noDlg /package=""Adobe_V1""")
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /product=""SapBI""")
+		'WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /product=""ECL710+SAPDTS+BW350+KW710+GUI710ISHMED+GUI710TWEAK+JNet+SAPGUI710"" /TitleComponent:""SAPGUI710"" /IgnoreMissingProducts")
+		WshShell.run ("""C:\Program Files (x86)\SAP\SAPsetup\setup\NwSapSetup.exe"" /uninstall /noDlg /product=""ECL710+SAPDTS+BW350+KW710+GUI710ISHMED+GUI710TWEAK+JNet+SAPGUI710+SapBI"" /TitleComponent:""SAPGUI710"" /IgnoreMissingProducts")
+		
+		Dim FSO
+		Set FSO = CreateObject("Scripting.FileSystemObject")
+		FSO.DeleteFolder("C:\ProgramData\Microsoft\Windows\Start Menu\Programs\SAP Front End")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\Business Explorer")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\FrontEnd")
+		FSO.DeleteFolder("C:\Program Files (x86)\SAP\SapSetup")
+		
+		'Waiting for uninstall to complete
+		
+		dstart = Now
+		idTimer = window.setTimeOut("DELREG", 180000, "VBScript")
+	
+	End Sub
+	
+	'Routine to remove registry
+	Sub DELREG
+		'remove registry now called from Uninstall script
+		
+		On Error Resume Next
+		dim WshShell
+		set WshShell = CreateObject("WScript.shell")
+
+		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\14.0\Excel\Options /v OPEN /f & exit"
+		WshShell.run "cmd /k /q  & REG DELETE HKEY_CURRENT_USER\Software\Microsoft\Office\15.0\Excel\Options /v OPEN /f & exit"
+
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPGUI710\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP_WUS\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAPBI\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SAP Channel Encryption\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2385C070-EC26-4AB9-8718-E605C977C0ED}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{A47A9101-6EB5-4314-BDA1-297880FBB908}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{CEC7A786-A9C8-4EF7-BB59-6518E3B3C878}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{196467F1-C11F-4F76-858B-5812ADC83B94}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{44D66AD9-AE19-4AFD-BE7E-A1B44C856697}\"
+		WshShell.REGDELETE "HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{2EA870FA-585F-4187-903D-CB9FFD21E2E0}\"
+		
+		'Check process to find uninstall status 
+		'else simply keep it without noDlg
+
+		set objWMIService = GetObject ("winmgmts:")
+		foundProc = False
+		procName="nwsapsetup.exe"
+		procNameFriend="SAP SETUP"
+
+		for each Process in objWMIService.InstancesOf("Win32_Process")
+		If StrComp(Process.Name,procName,vbTextCompare)=0 then
+		foundProc=true
+		End If
+		Next
+		If foundProc = false Then
+			RELOAD
+		End If
+		If foundProc = True Then
+			'MsgBox "Sorry it is taking longer :("
+
+			pbWaitTime = 90        ' How many seconds the progress bar lasts 
+			pbHeight = 20        ' Progress bar height 
+			pbWidth= 600         ' Progress bar width 
+			pbUnloadedColor="white"        ' Color of unloaded area 
+			pbLoadedColor="black"        ' Color of loaded area 
+			pbBorder="grey"        ' Color of Progress bar border 
+			pbStartTime = Now 
+			rProgressbar 
+			pbTimerID = window.setInterval("rProgressbar", 10)
+
+		End If
+		window.clearTimeout(idTimer)
+	End Sub
+	
+	'**********************************************************
+	'*************** UNINSTALLATION ****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** BEx Addin ****************************
+	'**********************************************************
+	
+	'Add BEx script here
+	Sub doBEx
+		Const HKEY_CURRENT_USER = &H80000001
+		strComputer = "."
+		Set oReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\" & _ 
+		strComputer & "\root\default:StdRegProv")
+		strKeyPath = "SOFTWARE\Microsoft\Office\14.0\Excel\Options"
+		strValueName = "OPEN"
+		strValue = """C:\Program Files (x86)\Common Files\SAP Shared\BW\sapbex.xla"""
+		oReg.SetStringValue HKEY_CURRENT_USER,strKeyPath,strValueName,strValue
+		
+		NOTIFYADDIN 'this calls for sub to notify that addin has been added
+			
+	End Sub
+	
+	'**********************************************************
+	'*************** BEx Addin ****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** Copy INI Files****************************
+	'**********************************************************
+	'Create connections
+	Sub doINI
+	On error resume next 'remove this later 
+	
+			Dim FSO
+			Set FSO = CreateObject("Scripting.FileSystemObject")
+
+			'Copy the files if they don't exist, rename them before copying if they exist
+			'Copying saplogon.ini
+			If (FSO.FileExists("C:\windows\saplogon.ini")) Then
+				FSO.DeleteFile "C:\Windows\saplogon.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", "C:\windows\saplogon.ini"
+			End If
+
+			'***************************************************************
+
+			'copying services // double if loop
+
+			If (FSO.FileExists("C:\Windows\System32\drivers\etc\services.old")) Then
+				FSO.DeleteFile "C:\Windows\System32\drivers\etc\services.old"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+			Else
+					If (FSO.FileExists("C:\windows\System32\drivers\etc\services")) Then
+						FSO.MoveFile "C:\windows\System32\drivers\etc\services", "C:\windows\System32\drivers\etc\services.old"
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+					Else
+						FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\services", "C:\windows\System32\drivers\etc\services"
+					End If
+			End If
+
+			'*******************************************************************
+
+			'copying sapmsg.ini
+
+			If (FSO.FileExists("C:\windows\sapmsg.ini")) Then
+				'FSO.MoveFile "C:\windows\sapmsg.ini", "C:\windows\sapmsg.ini.old"
+				FSO.DeleteFile "C:\Windows\sapmsg.ini"
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\sapmsg.ini", "C:\windows\sapmsg.ini"
+			End If
+
+			'***************************************************************
+
+			'copying saplogon.ini to appdata
+			Dim LocalAppData
+
+			Set WshShell = CreateObject("Wscript.Shell")
+
+			LocalAppData = WshShell.ExpandEnvironmentStrings("%APPDATA%")
+
+			If (FSO.FileExists(LocalAppData & "\SAP\Common\saplogon.ini")) Then
+				FSO.DeleteFile(LocalAppData & "\SAP\Common\saplogon.ini")
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+			Else
+				FSO.CopyFile "\\indshare\apps\NonAdobe\Win\SAP\SAPGUI_720\CustomerFiles\saplogon.ini", LocalAppData & "\SAP\Common\saplogon.ini"
+			End If
+			
+			Set FSO = nothing
+			NOTIFYINI
+	End Sub
+	
+	'**********************************************************
+	'*************** Copy INI Files****************************
+	'**********************************************************
+	
+	'**********************************************************
+	'*************** INSTALLATION ****************************
+	'**********************************************************
+	'Sub for SAP 720
+	Sub INS720
+		If loc_720(1).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("APC720", 2000, "VBScript")
+		ElseIf loc_720(2).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("EME720", 2000, "VBScript")
+		ElseIf loc_720(3).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("NOI720", 2000, "VBScript")
+		ElseIf loc_720(4).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("LEH720", 2000, "VBScript")
+		ElseIf loc_720(5).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("OTT720", 2000, "VBScript")
+		ElseIf loc_720(6).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("SJO720", 2000, "VBScript")
+		ElseIf loc_720(7).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("SEA720", 2000, "VBScript")
+		End If
+	End Sub
+	
+	'Sub for SAP 730
+	Sub INS730
+		If loc_730(1).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("APC730", 2000, "VBScript")
+		ElseIf loc_730(2).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("EME730", 2000, "VBScript")
+		ElseIf loc_730(3).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("NOI730", 2000, "VBScript")
+		ElseIf loc_730(4).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("LEH730", 2000, "VBScript")
+		ElseIf loc_730(5).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("OTT730", 2000, "VBScript")
+		ElseIf loc_730(6).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("SJO730", 2000, "VBScript")
+		ElseIf loc_730(7).selected Then
+			PREINSTALL
+			dstart = Now
+			idTimer = window.setTimeOut("SEA730", 2000, "VBScript")
+		End If
+	End Sub
+	'**********************************NOIDA*******************************************
+		Sub NOI720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub NOI730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\indshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+		'**********************************NOIDA*******************************************
+		'**********************************SINGAPORE*******************************************
+		Sub SNG720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\sinadofs01.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub SNG730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\sinadofs01.pac.adobe.com\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+		'**********************************SINGAPORE*******************************************
+		'**********************************APAC*******************************************
+		Sub APC720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\odaiba.pac.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub APC730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\odaiba.pac.adobe.com\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************APAC*******************************************
+	'**********************************EMEA*******************************************
+		Sub EME720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub EME730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\du1isi0.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************EMEA*******************************************
+	'**********************************LEHI*******************************************
+		Sub LEH720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub LEH730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\lehishare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************LEHI*******************************************
+	'**********************************OTTAWA*******************************************
+		Sub OTT720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub OTT730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\ottstore.can.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************OTTAWA*******************************************
+	'**********************************SAN JOSE*******************************************
+		Sub SJO720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub SJO730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\sjshare.corp.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************SAN JOSE*******************************************
+	'**********************************SEATTLE*******************************************
+		Sub SEA720
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\seashare.sea.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_720\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP720NOW
+		End Sub
+		
+		Sub SEA730
+			dim objShell
+			dim objFolder
+					
+			set objShell = CreateObject("shell.application")
+			set objFolder = objShell.NameSpace("C:\Windows\Temp")
+			objFolder.CopyHere("\\seashare.sea.adobe.com\apps\NonAdobe\Win\SAP\SAPGUI_730\")
+
+			set objShell = nothing
+			set objFolder = nothing
+			SETUP730NOW
+		End Sub
+	'**********************************SEATTLE*******************************************
+	
+	Sub SETUP720NOW
+	On Error Resume Next
+		pbWaitTime = 240         ' How many seconds the progress bar lasts 
+		pbHeight = 20        ' Progress bar height 
+		pbWidth= 640         ' Progress bar width 
+		pbUnloadedColor="white"        ' Color of unloaded area 
+		pbLoadedColor="black"        ' Color of loaded area 
+		pbBorder="grey"        ' Color of Progress bar border 
+		pbStartTime = Now 
+		rProgressbar 
+		pbTimerID = window.setInterval("rProgressbar", 10)
+		set WshShell = CreateObject("WScript.shell")
+		WshShell.run ("C:\Windows\Temp\SAPGUI_720\Setup\NwSapSetup.exe /package=Adobe_V1 /noDlg")
+
+		If Err.Number <> 0 Then 'error handling
+			MsgBox "Setup cancelled"
+			RELOAD
+		On Error Goto 0
+		Err.Clear
+		End If
+	End Sub
+	
+	Sub SETUP730NOW
+	On Error Resume Next
+		pbWaitTime = 240         ' How many seconds the progress bar lasts 
+		pbHeight = 20        ' Progress bar height 
+		pbWidth= 640         ' Progress bar width 
+		pbUnloadedColor="white"        ' Color of unloaded area 
+		pbLoadedColor="black"        ' Color of loaded area 
+		pbBorder="grey"        ' Color of Progress bar border 
+		pbStartTime = Now 
+		rProgressbar 
+		pbTimerID = window.setInterval("rProgressbar", 10)
+		set WshShell = CreateObject("WScript.shell")
+		WshShell.run ("C:\Windows\Temp\SAPGUI_730\Setup\NwSapSetup.exe /package=Adobe_V1 /noDlg")
+		
+		If Err.Number <> 0 Then 'error handling
+			MsgBox "Setup cancelled"
+			RELOAD
+		On Error Goto 0
+		Err.Clear
+		End If
+	End Sub
+	
+	'**********************************************************
+	'*************** INSTALLATION ****************************
+	'**********************************************************
+</SCRIPT> 
+
+<body>
+<div id="statbar"> <!-- For progress bar--> 
+	<div> <!-- This is my SAP ALL in One Fix -->
+		
+		<a href="#" onClick="doBEx">
+			<div class="btn" id="addin" onmouseover="bexon" onmouseout="bexoff">
+				Add BEx Addin
+			</div>
+		<!-- End of BEx addin addin Sub -->
+		</a>
+		<a href="#" onClick="doINI">
+			<div class="btn" id="ini" onmouseover="inion" onmouseout="inioff">
+				Create connections
+			</div>
+		</a> <!-- End of INI file copying Sub-->
+		
+		<a href="#" onclick="doUNINS">
+			<div class="btn" id="uninstall" onmouseover="uninson" onmouseout="uninsoff">
+				Uninstall SAP
+			</div>
+		</a> <!-- End of SAP uninstalling Sub-->
+		
+		<div id="install"> <!-- This is install div-->
+			
+			<div id="install_menu"> <!-- This is install menu -->
+				<span>SAP Install Menu </span>
+			</div>
+	
+			<div id="720"> <!-- Select location for SAP 720 -->
+				<p> SAP 720</p>
+					<select name="loc_720" onChange="INS720">
+						<option value="0" Selected>Choose your location</option>
+						<option value="1">APAC</option>
+						<option value="2">EMEA</option>
+						<option value="3">INDIA</option>
+						<option value="4">LEHI</option>
+						<option value="5">OTTAWA</option>
+						<option value="6">SAN JOSE</option>
+						<option value="7">SEATTLE</option>
+			</select>
+			</div>
+			<div id="730">  <!-- Select location for SAP 730 -->
+				<p> SAP 730</p> 
+				<select name="loc_730" onChange="INS730">
+						<option value="0" Selected>Choose your location</option>
+						<option value="1">APAC</option>
+						<option value="2">EMEA</option>
+						<option value="3">INDIA</option>
+						<option value="4">LEHI</option>
+						<option value="5">OTTAWA</option>
+						<option value="6">SAN JOSE</option>
+						<option value="7">SEATTLE</option>
+			</select>
+			</div>
+
+		</div>
+		
+	</div> <!-- End of Div -->
+</div> <!-- This is progress bar -->
+<p id="SD">
+If you face any issue with this application or have a question, please  <a href= https://inside.corp.adobe.com/itech/kc/IT00021.html >contact Service Desk</a>
+</p>
+</body> 
+
+</html>
