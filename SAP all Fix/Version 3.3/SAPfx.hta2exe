@@ -6,8 +6,8 @@
     </dependencies>
     <build>32bit</build>
     <details>
-        <version>3.3.1.0</version>
-        <description></description>
+        <version>3.3.3.0</version>
+        <description>SAP Fixit</description>
         <productName>SAPfx</productName>
         <copyright>Copyright (C) 2015</copyright>
     </details>
